@@ -48,3 +48,24 @@ activities.addEventListener("change", (e) => {
     }
     totalCost.textContent = `Total: $${newTotal}`;
 });
+
+
+const paymentType = document.querySelector("#payment");
+paymentType.options[1].selected = true;
+document.querySelector("#paypal").hidden = true;
+document.querySelector("#bitcoin").hidden = true;
+paymentType.addEventListener("change", (e) => {
+    if (paymentType.options[1].selected) {
+        document.querySelector("#credit-card").hidden = false;
+        document.querySelector("#paypal").hidden = true;
+        document.querySelector("#bitcoin").hidden = true;
+    } else if (paymentType.options[2].selected) {
+        document.querySelector("#credit-card").hidden = true;
+        document.querySelector("#paypal").hidden = false;
+        document.querySelector("#bitcoin").hidden = true;
+    } else {
+        document.querySelector("#credit-card").hidden = true;
+        document.querySelector("#paypal").hidden = true;
+        document.querySelector("#bitcoin").hidden = false;
+    }
+});
