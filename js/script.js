@@ -37,17 +37,25 @@ shirtDesign.addEventListener("change", (e) => {
 const activities = document.querySelector("#activities");
 const checkboxes = document.querySelectorAll("#activities input");
 const totalCost = document.querySelector("#activities-cost");
+let newTotal = 0;
 activities.addEventListener("change", (e) => {
-    const clicked = e.target;
-    const checkedCost = clicked.getAttribute("data-cost");
-    let newTotal = 0;
-    for (let i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].checked) {
-            newTotal += parseInt(checkboxes[i].getAttribute("data-cost"));
-        }
+    if (e.target.checked) {
+        newTotal += parseInt(e.target.getAttribute("data-cost"));
+    } else {
+        newTotal -= parseInt(e.target.getAttribute("data-cost"));
     }
-    totalCost.textContent = `Total: $${newTotal}`;
+    totalCost.innerHTML = `Total: $${newTotal}`;
+    for (let i = 0; i < checkboxes.length; i++) {
+        if (e.target.getAttribute("data-day-and-time") === checkboxes[i].getAttribute("data-day-and-time") && e.target !== checkboxes[i]) {
+            if (e.target.checked) {
+                checkboxes[i].parentElement.className = "disabled";
+            } else {
+                checkboxes[i].parentElement.className = "";
+            }
+        } 
+    }
 });
+
 
 
 const paymentType = document.querySelector("#payment");
@@ -67,5 +75,101 @@ paymentType.addEventListener("change", (e) => {
         document.querySelector("#credit-card").hidden = true;
         document.querySelector("#paypal").hidden = true;
         document.querySelector("#bitcoin").hidden = false;
+    }
+});
+
+
+const nameField = document.querySelector("#name");
+const nameValidity = () => {
+    const nameInput = nameField.value;
+    const nameIsValid = /^[A-Za-z]+\s?[A-Za-z]*?\s?[A-Za-z]*?$/.test(nameInput);
+    return nameIsValid;
+}
+const emailField = document.querySelector("#email");
+const emailValidity = () => {
+    const emailInput = emailField.value;
+    const emailIsValid = /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailInput);
+    return emailIsValid;
+}
+const activitiesValidity = () => {
+    const activitiesIsValid = newTotal > 0;
+    return activitiesIsValid;
+}
+const cardNumberField = document.querySelector("#cc-num");
+const cardNumberValidity = () => {
+    const cardNumberInput = cardNumberField.value;
+    const cardNumberIsValid = /^\d{13}\d?\d?\d?$/.test(cardNumberInput);
+    return cardNumberIsValid;
+}
+const zipField = document.querySelector("#zip");
+const zipValidity = () => {
+    const zipInput = zipField.value;
+    const zipIsValid = /^\d{5}$/.test(zipInput);
+    return zipIsValid;
+}
+const cvvField = document.querySelector("#cvv");
+const cvvValidity = () => {
+    const cvvInput = cvvField.value;
+    const cvvIsValid = /^\d{3}$/.test(cvvInput);
+    return cvvIsValid;
+}
+
+
+document.querySelector("form").addEventListener("submit", (e) => {
+    if (!nameValidity()) {
+        e.preventDefault();
+        console.log("name is invalid");
+        nameField.parentElement.className = "not-valid";
+        nameField.parentElement.lastElementChild.className = "name-hint";
+    } else {
+        nameField.parentElement.className = "valid";
+        nameField.parentElement.lastElementChild.className = "name-hint hint";
+    }
+    if (!emailValidity()) {
+        e.preventDefault();
+        console.log("email is invalid");
+        emailField.parentElement.className = "not-valid";
+        emailField.parentElement.lastElementChild.className = "email-hint";
+    } else {
+        emailField.parentElement.className = "valid";
+        emailField.parentElement.lastElementChild.className = "email-hint hint";
+    }
+    if (!activitiesValidity()) {
+        e.preventDefault();
+        console.log("activities is invalid");
+        activities.className = "activities not-valid";
+        activities.lastElementChild.className = "activities-hint";
+    } else {
+        activities.className = "activities valid";
+        activities.lastElementChild.className = "activities-hint hint";
+    }
+    if (paymentType.value === "credit-card") {
+        if (!cardNumberValidity()) {
+            e.preventDefault();
+            console.log("card is invalid");
+            cardNumberField.parentElement.className = "not-valid";
+            cardNumberField.parentElement.lastElementChild.className = "cc-hint";
+        } else {
+            cardNumberField.parentElement.className = "valid";
+            cardNumberField.parentElement.lastElementChild.className = "cc-hint hint";
+        }
+        if (!zipValidity()) {
+            e.preventDefault();
+            console.log("zip is invalid");
+            zipField.parentElement.className = "not-valid";
+            zipField.parentElement.lastElementChild.className = "zip-hint";
+        } else {
+            zipField.parentElement.className = "valid";
+            zipField.parentElement.lastElementChild.className = "zip-hint hint";
+        }
+        if (!cvvValidity()) {
+            e.preventDefault();
+            console.log("cvv is invalid");
+            cvvField.parentElement.className = "not-valid";
+            cvvField.parentElement.lastElementChild.className = "cvv-hint";
+        } else {
+            cvvField.parentElement.className = "valid";
+            cvvField.parentElement.lastElementChild.className = "cvv-hint hint";
+        }
     }
 });
