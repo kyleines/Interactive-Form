@@ -146,8 +146,15 @@ document.querySelector("form").addEventListener("submit", (e) => {
     }
     if (!emailValidity()) {
         e.preventDefault();
-        emailField.parentElement.className = "not-valid";
-        emailField.parentElement.lastElementChild.className = "email-hint";
+        if (emailField.value === "") {
+            emailField.parentElement.className = "not-valid";
+            emailField.parentElement.lastElementChild.className = "email-hint";
+            emailField.parentElement.lastElementChild.innerHTML = `Email field cannot be blank`;
+        } else {
+            emailField.parentElement.className = "not-valid";
+            emailField.parentElement.lastElementChild.className = "email-hint";
+            emailField.parentElement.lastElementChild.innerHTML = `Email address must be formatted correctly`;
+        }
     } else {
         emailField.parentElement.className = "valid";
         emailField.parentElement.lastElementChild.className = "email-hint hint";
