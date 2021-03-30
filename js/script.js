@@ -48,13 +48,23 @@ activities.addEventListener("change", (e) => {
     for (let i = 0; i < checkboxes.length; i++) {
         if (e.target.getAttribute("data-day-and-time") === checkboxes[i].getAttribute("data-day-and-time") && e.target !== checkboxes[i]) {
             if (e.target.checked) {
+                checkboxes[i].disabled = true;
                 checkboxes[i].parentElement.className = "disabled";
             } else {
+                checkboxes[i].disabled = false;
                 checkboxes[i].parentElement.className = "";
             }
         } 
     }
 });
+for (let i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].addEventListener("focus", (e) => {
+        e.target.parentElement.className += " focus";
+    });
+    checkboxes[i].addEventListener("blur", (e) => {
+        e.target.parentElement.className += "blur";
+    });
+}
 
 
 
@@ -113,12 +123,21 @@ const cvvValidity = () => {
     const cvvIsValid = /^\d{3}$/.test(cvvInput);
     return cvvIsValid;
 }
+cvvField.addEventListener("keyup", (e) => {
+    if (!cvvValidity()) {
+        e.preventDefault();
+        cvvField.parentElement.className = "not-valid";
+        cvvField.parentElement.lastElementChild.className = "cvv-hint";
+    } else {
+        cvvField.parentElement.className = "valid";
+        cvvField.parentElement.lastElementChild.className = "cvv-hint hint";
+    }
+});
 
 
 document.querySelector("form").addEventListener("submit", (e) => {
     if (!nameValidity()) {
         e.preventDefault();
-        console.log("name is invalid");
         nameField.parentElement.className = "not-valid";
         nameField.parentElement.lastElementChild.className = "name-hint";
     } else {
@@ -127,7 +146,6 @@ document.querySelector("form").addEventListener("submit", (e) => {
     }
     if (!emailValidity()) {
         e.preventDefault();
-        console.log("email is invalid");
         emailField.parentElement.className = "not-valid";
         emailField.parentElement.lastElementChild.className = "email-hint";
     } else {
@@ -136,7 +154,6 @@ document.querySelector("form").addEventListener("submit", (e) => {
     }
     if (!activitiesValidity()) {
         e.preventDefault();
-        console.log("activities is invalid");
         activities.className = "activities not-valid";
         activities.lastElementChild.className = "activities-hint";
     } else {
@@ -146,7 +163,6 @@ document.querySelector("form").addEventListener("submit", (e) => {
     if (paymentType.value === "credit-card") {
         if (!cardNumberValidity()) {
             e.preventDefault();
-            console.log("card is invalid");
             cardNumberField.parentElement.className = "not-valid";
             cardNumberField.parentElement.lastElementChild.className = "cc-hint";
         } else {
@@ -155,7 +171,6 @@ document.querySelector("form").addEventListener("submit", (e) => {
         }
         if (!zipValidity()) {
             e.preventDefault();
-            console.log("zip is invalid");
             zipField.parentElement.className = "not-valid";
             zipField.parentElement.lastElementChild.className = "zip-hint";
         } else {
@@ -164,7 +179,6 @@ document.querySelector("form").addEventListener("submit", (e) => {
         }
         if (!cvvValidity()) {
             e.preventDefault();
-            console.log("cvv is invalid");
             cvvField.parentElement.className = "not-valid";
             cvvField.parentElement.lastElementChild.className = "cvv-hint";
         } else {
